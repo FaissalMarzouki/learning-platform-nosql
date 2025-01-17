@@ -1,14 +1,38 @@
 // Question: Pourquoi créer des services séparés ?
-// Réponse: 
+// Réponse: Abstraction des détails d'implémentation
 
 const { ObjectId } = require('mongodb');
 
-// Fonctions utilitaires pour MongoDB
 async function findOneById(collection, id) {
-  // TODO: Implémenter une fonction générique de recherche par ID
+  try {
+    const objectId = new ObjectId(id);
+    return await collection.findOne({ _id: objectId });
+  } catch (error) {
+    console.error('Error in findOneById:', error);
+    throw error;
+  }
 }
 
-// Export des services
+async function insertOne(collection, data) {
+  try {
+    return await collection.insertOne(data);
+  } catch (error) {
+    console.error('Error in insertOne:', error);
+    throw error;
+  }
+}
+
+async function find(collection, query, options = {}) {
+  try {
+    return await collection.find(query, options).toArray();
+  } catch (error) {
+    console.error('Error in find:', error);
+    throw error;
+  }
+}
+
 module.exports = {
-  // TODO: Exporter les fonctions utilitaires
+  findOneById,
+  insertOne,
+  find
 };
